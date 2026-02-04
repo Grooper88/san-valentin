@@ -5,45 +5,63 @@ const container = document.querySelector(".buttons");
 let yesScale = 1;
 let noScale = 1;
 
+function getDistance(x1, y1, x2, y2) {
+    return Math.hypot(x2 - x1, y2 - y1);
+}
+
 function moveAndShrinkNo(e) {
     if (e) e.preventDefault();
 
-    const maxX = container.offsetWidth - noBtn.offsetWidth;
-    const maxY = container.offsetHeight - noBtn.offsetHeight;
+    const containerRect = container.getBoundingClientRect();
+    const yesRect = yesBtn.getBoundingClientRect();
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+    let x, y;
+    let attempts = 0;
+
+    do {
+        x = Math.random() * (container.offsetWidth - noBtn.offsetWidth);
+        y = Math.random() * (container.offsetHeight - noBtn.offsetHeight);
+        attempts++;
+    } while (
+        getDistance(
+            x,
+            y,
+            yesRect.left - containerRect.left,
+            yesRect.top - containerRect.top
+        ) < 120 && attempts < 20
+    );
 
     noBtn.style.left = `${x}px`;
     noBtn.style.top = `${y}px`;
 
-    // NO se encoge hasta desaparecer
-    noScale -= 0.15;
+    /* NO se encoge hasta desaparecer */
+    noScale -= 0.18;
     if (noScale <= 0.15) {
         noBtn.style.transform = "scale(0)";
         noBtn.style.opacity = "0";
+        noBtn.style.pointerEvents = "none";
     } else {
         noBtn.style.transform = `scale(${noScale})`;
     }
 
-    // SÍ crece FUERTE
-    yesScale = Math.min(yesScale + 0.4, 4);
+    /* SÍ crece fuerte */
+    yesScale = Math.min(yesScale + 0.45, 4);
     yesBtn.style.transform = `translateX(-120%) scale(${yesScale})`;
 }
 
-// Desktop
+/* Desktop */
 noBtn.addEventListener("mouseenter", moveAndShrinkNo);
 
-// Mobile
+/* Mobile */
 noBtn.addEventListener("touchstart", moveAndShrinkNo);
 
-// Blindar click en NO
+/* Blindar click en NO */
 noBtn.addEventListener("click", (e) => {
     e.preventDefault();
     moveAndShrinkNo(e);
 });
 
-// Click final en SÍ
+/* Click en SÍ */
 yesBtn.addEventListener("click", () => {
     document.body.innerHTML = `
         <div style="
@@ -64,32 +82,41 @@ yesBtn.addEventListener("click", () => {
                 box-shadow:0 20px 40px rgba(0,0,0,0.15);
                 font-family:'Segoe UI', sans-serif;
             ">
-                <h1 style="color:white;font-size:2.6rem;margin-bottom:15px;">
+
+                <img src="gifs/love.gif" style="
+                    width:170px;
+                    margin-bottom:30px;
+                ">
+
+                <h1 style="color:white;font-size:2.5rem;margin-bottom:15px;">
                     Sabía que dirías que sí 💕
                 </h1>
 
                 <p style="color:white;font-size:1.2rem;margin-bottom:25px;">
-                    Porque cuando dos corazones se eligen,  
-                    no hace falta insistir… solo sentir.
+                    Desde este momento, cada latido tiene tu nombre.
                 </p>
 
                 <hr style="border:none;height:1px;background:rgba(255,255,255,0.4);margin:25px 0;">
 
                 <p style="
                     color:white;
-                    font-size:1.05rem;
+                    font-size:1.15rem;
                     font-style:italic;
                     line-height:1.6;
-                ">
-                    “¿Qué es poesía?, dices mientras clavas<br>
-                    en mi pupila tu pupila azul.<br>
-                    ¡Qué es poesía! ¿Y tú me lo preguntas?<br>
-                    Poesía… eres tú.”
-                </p>
-
-                <p style="color:white;font-size:0.9rem;margin-top:15px;opacity:0.85;">
+                    margin-top:20px;
+                    ">
+                        “Podrá nublarse el sol eternamente;<br>
+                        podrá secarse en un instante el mar;<br>
+                        podrá romperse el eje de la tierra<br>
+                        como un débil cristal.<br><br>
+                        ¡Todo sucederá! Podrá la muerte<br>
+                        cubrirme con su fúnebre crespón;<br>
+                        pero jamás en mí podrá apagarse<br>
+                        la llama de tu amor.”
+                        </p>
+                    <p style="color:white;font-size:0.9rem;margin-top:15px;opacity:0.85;">
                     — Gustavo Adolfo Bécquer
-                </p>
+                    </p>
             </div>
         </div>
     `;

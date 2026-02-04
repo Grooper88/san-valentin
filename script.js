@@ -79,10 +79,11 @@ yesBtn.addEventListener("click", () => {
                 font-family:'Segoe UI', sans-serif;
             ">
 
-                <img src="love.gif" style="
-                    width:170px;
-                    margin-bottom:30px;
-                ">
+            <img src="love.gif" style="
+                width:170px;
+                margin-bottom:30px;
+            ">
+
 
                 <h1 style="
                     color:white;
@@ -136,3 +137,4 @@ yesBtn.addEventListener("click", () => {
         </div>
     `;
 });
+
